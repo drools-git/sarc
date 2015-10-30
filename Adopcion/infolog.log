@@ -1,0 +1,7 @@
+2015-10-30 16:39:05,150 INFO  [ClasspathKieProject] Found kmodule: file:/C:/DEV2/GIT/temp3/ve.gob.sarc/Adopcion/target/classes/META-INF/kmodule.xml 
+2015-10-30 16:39:05,164 DEBUG [ClasspathKieProject] KieModule URL type=file url=/C:/DEV2/GIT/temp3/ve.gob.sarc/Adopcion/target/classes 
+2015-10-30 16:39:06,054 DEBUG [ClasspathKieProject] Found and used pom.properties C:\DEV2\GIT\temp3\ve.gob.sarc\Adopcion\target\classes\META-INF\maven\sarc-reglas\Adopcion\pom.properties 
+2015-10-30 16:39:06,063 DEBUG [ClasspathKieProject] Discovered classpath module sarc-reglas:Adopcion:1.0 
+2015-10-30 16:39:06,072 INFO  [KieRepositoryImpl] KieModule was added: FileKieModule[releaseId=sarc-reglas:Adopcion:1.0,file=C:\DEV2\GIT\temp3\ve.gob.sarc\Adopcion\target\classes] 
+2015-10-30 16:39:09,188 DEBUG [KnowledgeBaseImpl] Starting Engine in PHREAK mode 
+2015-10-30 16:39:09,685 DEBUG [UtilLog] HELLO VIVIANA 

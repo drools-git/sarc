@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>javascript:;
+
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<appender name="uneFicherosInfo" class="org.apache.log4j.RollingFileAppender">
+		<param name="MaxFileSize" value="100KB" />
+		<param name="MaxBackupIndex" value="5" />
+		<param name="Threshold" value="DEBUG" />
+		<!--param name="File" value="C:/Drools/infolog.log" / -->
+		<param name="File" value="/home/jboss/jboss-drools/standalone/log/kiesarc.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" value="%d %-5p [%c{1}] %m %n" />
+		</layout>
+	</appender>
+	
+	<appender name="uneFicherosInfo2" class="org.apache.log4j.RollingFileAppender">
+		<param name="MaxFileSize" value="100KB" />
+		<param name="MaxBackupIndex" value="5" />
+		<param name="Threshold" value="DEBUG" />
+		<param name="File" value="infolog.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" value="%d %-5p [%c{1}] %m %n" />
+		</layout>
+	</appender>
+	
+	<root>
+	   <priority value="DEBUG" />
+	   <appender-ref ref="uneFicherosInfo" />
+	   <!--appender-ref ref="uneFicherosInfo2" / -->
+	</root>
+</log4j:configuration>

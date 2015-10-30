@@ -1,0 +1,13 @@
+<kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <kbase name="SARC_SESSION" packages="sarc_reglas.adopcion" default="false" eventProcessingMode="stream" equalsBehavior="identity" includes="SARC_SESSION">
+    <ksession name="sessionStateless" type="stateless" default="false" clockType="realtime"/>
+  </kbase>
+</kmodule>
+
+
+<!-- <?xml version="1.0" encoding="UTF-8"?> -->
+<!-- <kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule"> -->
+<!--     <kbase name="rules" packages="rules"> -->
+<!--         <ksession name="ksession-rules"/> -->
+<!--     </kbase> -->
+<!-- </kmodule> -->

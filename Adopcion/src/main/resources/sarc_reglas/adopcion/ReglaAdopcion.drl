@@ -1,0 +1,272 @@
+
+
+//created on: 27/08/2015
+
+
+//package rules
+//import ve.gob.cne.sarc.reglas.Adopcion;
+
+package sarc_reglas.adopcion;
+import sarc_reglas.adopcion.Adopcion;
+import util.UtilLog;
+
+dialect "mvel"
+
+
+rule verdaita
+
+	when 
+		eval(true)
+	then 
+	    System.out.println("TRUE SIEMPRE");
+	end
+	
+
+rule "00 ADOPCION - INSCRIPCION"
+    when        
+        adopcion : Adopcion(escenario == "GATE 0",
+                             tipoRegistro == Adopcion.TIPO_REGISTRO_INSCRIPCION
+                           )
+    then
+    	System.out.println("HOLA HOLA T5");
+        UtilLog.log("****** DROOLS REGLA 0 **********");
+    	System.out.println("");
+     	System.out.println("****** DROOLS REGLA 0 **********");
+        System.out.println("=====> Drools: ES " + Adopcion.TIPO_REGISTRO_INSCRIPCION);
+        System.out.println("");
+
+        adopcion.setEscenario("GATE 1");
+        adopcion.setAccion(Adopcion.ACCION_VISTA_INSCRIPCION);
+        System.out.println("* * * * Action: " + adopcion.getAccion() );
+        adopcion.setContinuarEvaluando(true);
+    end
+
+rule "01 ADOPCION - DECISION_JUDICIAL"
+    when        
+        adopcion : Adopcion(escenario == "GATE 0",
+                             tipoRegistro == Adopcion.TIPO_REGISTRO_DECISION_JUDICIAL
+                            )
+    then
+        System.out.println("");
+     	System.out.println("****** DROOLS REGLA 1 **********");
+        System.out.println("=====> Drools: ES " + Adopcion.TIPO_REGISTRO_DECISION_JUDICIAL);
+        System.out.println("");
+
+        adopcion.setEscenario("GATE 2");
+        adopcion.setAccion(Adopcion.ACCION_VISTA_DECISION_JUDICIAL);
+        System.out.println("* * * * Action: " + adopcion.getAccion() );
+        adopcion.setContinuarEvaluando(true);
+    end
+ 
+
+// **** Reglas de INSCRIPCION ****
+
+rule "02 ADOPCION - Caso INSCRIPCION Madre y Padre Presentes"
+    when        
+         adopcion : Adopcion(escenario == "GATE 1",
+                             estaMadreYPadrePresentes == true 
+                            )      
+    then     	
+    	System.out.println("");
+     	System.out.println("****** DROOLS REGLA 2 **********");
+        System.out.println("=====> Drools: ES "+ Adopcion.CASO_MADRE_Y_PADRE_PRESENTES);
+        System.out.println("");
+
+        adopcion.setEscenario("GATE 1.1");
+        adopcion.setAccion(Adopcion.ACCION_VISTA_MADRE_Y_PADRE_PRESENTES);
+        System.out.println("* * * * Action: " + adopcion.getAccion() );
+        adopcion.setContinuarEvaluando(true);
+end 
+
+
+rule "03 ADOPCION - Caso INSCRIPCION Madre Presente o Padre Presente"
+    when        
+        adopcion : Adopcion(escenario == "GATE 1") and 
+                   (Adopcion(estaMadrePresente == true, vista: Adopcion.ACCION_VISTA_MADRE_PRESENTE) or
+                    Adopcion(estaPadrePresente == true, vista: Adopcion.ACCION_VISTA_PADRE_PRESENTE)
+                   )
+    then  
+    	System.out.println("");
+     	System.out.println("****** DROOLS REGLA 3 **********");
+        System.out.println("=====> Drools: ES " + Adopcion.CASO_MADRE_O_PADRE_PRESENTES );
+        System.out.println("");
+
+        adopcion.setEscenario("GATE 1.2");
+        adopcion.setAccion(vista);
+        adopcion.setContinuarEvaluando(true);
+    end
+
+rule "04 ADOPCION - Caso INSCRIPCION Madre y Padre Presentes, adoptado Con ID"
+    when        
+         adopcion : Adopcion(escenario == "GATE 1.1",
+                             estaAdoptadoConID == true
+                            )      
+    then     	  
+    	System.out.println("");
+     	System.out.println("****** DROOLS REGLA 4 **********");
+        System.out.println("=====> Drools: ES "+ Adopcion.CASO_MADRE_Y_PADRE_PRESENTES_ADOPTADO_CON_ID);
+        System.out.println("");
+
+        adopcion.setEscenario("GATE 1.1.1");
+        adopcion.setAccion(Adopcion.ACCION_VISTA_MADRE_Y_PADRE_PRESENTES_ADOPTADO_CON_ID);
+        System.out.println("* * * * Action: " + adopcion.getAccion());        
+        adopcion.setContinuarEvaluando(false);
+    end
+
+
+rule "05 ADOPCION - Caso INSCRIPCION Madre y Padre Presentes, adoptado Sin ID"
+    when        
+         adopcion : Adopcion(escenario == "GATE 1.1",
+                             estaAdoptadoConID == false
+                            )      
+    then     	  
+    	System.out.println("");
+     	System.out.println("****** DROOLS REGLA 5 **********");
+        System.out.println("=====> Drools: ES "+ "Adopcion.CASO_MADRE_Y_PADRE_PRESENTES_ADOPTADO_SIN_ID");
+        System.out.println("");
+
+        adopcion.setAccion(Adopcion.ACCION_VISTA_MADRE_Y_PADRE_PRESENTES_ADOPTADO_SIN_ID);
+        System.out.println("* * * * Action: " + adopcion.getAccion() );
+        adopcion.setEscenario("GATE 1.1.2");
+        adopcion.setContinuarEvaluando(false);
+    end
+
+rule "06 ADOPCION - Caso INSCRIPCION Madre o Padre Presentes, adoptado Con ID"
+    when        
+         adopcion : Adopcion(escenario == "GATE 1.2",
+         		     estaAdoptadoConID == true 
+                            )      
+    then     	  
+    	System.out.println("");
+     	System.out.println("****** DROOLS REGLA 6 **********");
+        System.out.println("=====> Drools: ES "+ "Adopcion.CASO_MADRE_O_PADRE_PRESENTES_ADOPTADO_CON_ID");
+        System.out.println("");
+
+        adopcion.setEscenario("GATE 1.2.1");
+        adopcion.setAccion(Adopcion.ACCION_VISTA_MADRE_O_PADRE_PRESENTES_ADOPTADO_CON_ID);
+        System.out.println("* * * * Action: " + adopcion.getAccion() );
+        adopcion.setContinuarEvaluando(false);
+    end
+
+rule "07 ADOPCION - Caso INSCRIPCION Madre o Padre Presentes, adoptado Sin ID"
+    when        
+        adopcion : Adopcion(escenario == "GATE 1.2",
+                            estaAdoptadoConID == false
+                           )      
+    then     	  
+    	System.out.println("");
+     	System.out.println("****** DROOLS REGLA 6 **********");
+        System.out.println("=====> Drools: ES "+ "Adopcion.CASO_MADRE_O_PADRE_PRESENTES_ADOPTADO_SIN_ID");
+        System.out.println("");
+
+        adopcion.setEscenario("GATE 1.2.2");
+        adopcion.setAccion (Adopcion.ACCION_VISTA_MADRE_O_PADRE_PRESENTES_ADOPTADO_SIN_ID);
+        System.out.println("* * * * Action: " + adopcion.getAccion() );
+        adopcion.setContinuarEvaluando(false);
+    end
+
+// **** Reglas de DECISION_JUDICIAL ****
+
+rule "08 ADOPCION - Caso DECISION_JUDICIAL Madre y Padre Presentes"
+    when        
+         adopcion : Adopcion(escenario == "GATE 2",
+                             estaMadreYPadrePresentes == true 
+                            )      
+    then     	
+    	System.out.println("");
+     	System.out.println("****** DROOLS REGLA 8 **********");
+        System.out.println("=====> Drools: ES "+ Adopcion.CASO_MADRE_Y_PADRE_PRESENTES);
+        System.out.println("");
+
+        adopcion.setEscenario("GATE 2.1");
+        adopcion.setAccion(Adopcion.ACCION_VISTA_MADRE_Y_PADRE_PRESENTES);
+        System.out.println("* * * * Action: " + adopcion.getAccion() );
+        adopcion.setContinuarEvaluando(true);
+end 
+
+
+rule "09 ADOPCION - Caso DECISION_JUDICIAL Madre Presente o Padre Presente"
+    when        
+        adopcion : Adopcion(escenario == "GATE 2") and 
+                   (Adopcion(estaMadrePresente == true, vista: Adopcion.ACCION_VISTA_MADRE_PRESENTE) or
+                    Adopcion(estaPadrePresente == true, vista: Adopcion.ACCION_VISTA_PADRE_PRESENTE)
+                   )
+    then  
+    	System.out.println("");
+     	System.out.println("****** DROOLS REGLA 9 **********");
+        System.out.println("=====> Drools: ES " + Adopcion.CASO_MADRE_O_PADRE_PRESENTES );
+        System.out.println("");
+
+        adopcion.setEscenario("GATE 2.2");
+        adopcion.setAccion(vista);
+        adopcion.setContinuarEvaluando(true);
+    end
+
+rule "10 ADOPCION - Caso DECISION_JUDICIAL Madre y Padre Presentes, adoptado Con ID"
+    when        
+         adopcion : Adopcion(escenario == "GATE 2.1",
+                             estaAdoptadoConID == true
+                            )      
+    then     	  
+    	System.out.println("");
+     	System.out.println("****** DROOLS REGLA 10 **********");
+        System.out.println("=====> Drools: ES "+ Adopcion.CASO_MADRE_Y_PADRE_PRESENTES_ADOPTADO_CON_ID);
+        System.out.println("");
+
+        adopcion.setEscenario("GATE 2.1.1");
+        adopcion.setAccion(Adopcion.ACCION_VISTA_MADRE_Y_PADRE_PRESENTES_ADOPTADO_CON_ID);
+        System.out.println("* * * * Action: " + adopcion.getAccion());        
+        adopcion.setContinuarEvaluando(false);
+    end
+
+
+rule "11 ADOPCION - Caso DECISION_JUDICIAL Madre y Padre Presentes, adoptado Sin ID"
+    when        
+         adopcion : Adopcion(escenario == "GATE 2.1",
+                             estaAdoptadoConID == false
+                            )      
+    then     	  
+    	System.out.println("");
+     	System.out.println("****** DROOLS REGLA 11 **********");
+        System.out.println("=====> Drools: ES "+ "Adopcion.CASO_MADRE_Y_PADRE_PRESENTES_ADOPTADO_SIN_ID");
+        System.out.println("");
+
+        adopcion.setAccion(Adopcion.ACCION_VISTA_MADRE_Y_PADRE_PRESENTES_ADOPTADO_SIN_ID);
+        System.out.println("* * * * Action: " + adopcion.getAccion() );
+        adopcion.setEscenario("GATE 2.1.2");
+        adopcion.setContinuarEvaluando(false);
+    end
+
+rule "12 ADOPCION - Caso DECISION_JUDICIAL Madre o Padre Presentes, adoptado Con ID"
+    when        
+         adopcion : Adopcion(escenario == "GATE 2.2",
+         		     estaAdoptadoConID == true 
+                            )      
+    then     	  
+    	System.out.println("");
+     	System.out.println("****** DROOLS REGLA 12 **********");
+        System.out.println("=====> Drools: ES "+ "Adopcion.CASO_MADRE_O_PADRE_PRESENTES_ADOPTADO_CON_ID");
+        System.out.println("");
+
+        adopcion.setEscenario("GATE 2.2.1");
+        adopcion.setAccion(Adopcion.ACCION_VISTA_MADRE_O_PADRE_PRESENTES_ADOPTADO_CON_ID);
+        System.out.println("* * * * Action: " + adopcion.getAccion() );
+        adopcion.setContinuarEvaluando(false);
+    end
+
+rule "13 ADOPCION - Caso DECISION_JUDICIAL Madre o Padre Presentes, adoptado Sin ID"
+    when        
+        adopcion : Adopcion(escenario == "GATE 2.2",
+                            estaAdoptadoConID == false
+                           )      
+    then     	  
+    	System.out.println("");
+     	System.out.println("****** DROOLS REGLA 13 **********");
+        System.out.println("=====> Drools: ES "+ "Adopcion.CASO_MADRE_O_PADRE_PRESENTES_ADOPTADO_SIN_ID");
+        System.out.println("");
+
+        adopcion.setEscenario("GATE 2.2.2");
+        adopcion.setAccion (Adopcion.ACCION_VISTA_MADRE_O_PADRE_PRESENTES_ADOPTADO_SIN_ID);
+        System.out.println("* * * * Action: " + adopcion.getAccion() );
+        adopcion.setContinuarEvaluando(false);
+    end
